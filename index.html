@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayCheck</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">PayCheck</div>
+        <nav>
+            <a href="./">Início</a>
+            <a href="./insert.html">Inserir</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content">
+            <h2>Transferências</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Índice</th>
+                        <th>Emissor</th>
+                        <th>Receptor</th>
+                        <th>Valor</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="transferencias">
+                </tbody>
+            </table>
+        </div>
+    </main>
+    
+    <script>
+        // Faz uma requisição HTTP ao servidor para buscar as transferências.
+        fetch("/transferencias")
+            // Converte o corpo da resposta recebida em JSON.
+            .then(res => res.json())
+            // Recebe os dados convertidos e executa o código quando a resposta chega.
+            .then(dados => {
+
+                // Localiza o tbody da tabela pelo atributo id.
+                const tabela = document.getElementById("transferencias");
+
+                // Percorre cada transferência do array recebido do servidor.
+                dados.forEach(item => {
+
+                    // Adiciona uma linha HTML à tabela, preenchendo os campos com os dados do item.
+                    // As crases permitem escrever HTML em várias linhas e ${} insere valores do JavaScript.
+                    tabela.innerHTML += `
+                        <tr>
+                            <td>${item.indice}</td>
+                            <td>${item.emissor} (${item.nome},${item.sobrenome})</td>
+                            <td>${item.destinatario}</td>
+                            <td>R$ ${item.valor}</td>
+                            <td>${new Date(item.data).toLocaleString("pt-BR")}</td>
+                        </tr>
+                    `;
+
+                });
+
+            });
+    </script>
+</body>
+</html>

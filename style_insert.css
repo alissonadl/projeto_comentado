@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+nav{
+    margin-left: 2vw;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    font-family: Arial, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    padding: 1.5vh 2vw 1.5vh 2vw;
+    background-color: #e5e8ec;
+    border-radius: 2vh;
+    color: #263c55;
+    font-weight: bold;
+}
+a:hover{
+    background:#cbced2;
+    transition:0.3s; 
+    transform:scale(1.075);
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e5e8ec;
+    color: #333;
+}
+
+/* Barra superior */
+header {
+    width: 100%;
+    height: 60px;
+    background-color: #263c55;
+    display: flex;
+    align-items: center;
+    padding-left: 3vw;  
+    padding-right: 3vw;
+}
+
+.logo {
+    color: white;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+/* Conteúdo */
+main {
+    padding: 5vh 3vw 5vh 3vw;
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    background-color: #fff;
+    padding: calc(1vw + 1vh);
+    border: 1px solid #d1d6dc;
+}
+
+h2 {
+    font-size: 21px;
+    font-weight: normal;
+    color: #34495e;
+    margin-bottom: 2vh;
+}
+
+/* Tabela */
+table {
+    border-collapse: collapse; /*"Gruda" as bordas"*/
+    background-color: white;
+}
+
+thead {
+    background-color: #344f6c;
+    color: white;
+}
+
+th {
+    padding: 13px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+td {
+    padding: 13px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #444;
+}
+
+button {
+    text-decoration: none;
+    padding: 1.25vh 1.75vw 1.25vh 1.75vw;
+    background-color: #e5e8ec;
+    border-radius: 2vh;
+    color: #263c55;
+    font-weight: bold;
+    border-style: solid;
+    border-color: #263c55;
+    margin: 3vh 0 0 0;
+}
+
+button:hover{
+    background:#cbced2;
+    transition:0.3s; 
+    transform:scale(1.02);
+}
+
+input {
+    width: 220px;
+    padding: 10px 12px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #263c55;
+    background-color: #f8f9fa;
+    border: 1px solid #cbd2da;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: #344f6c;
+    background-color: white;
+    box-shadow: 0 0 0 2px rgba(52, 79, 108, 0.12);
+}
