@@ -1,46 +1,54 @@
-// Importa o Express, biblioteca que facilita a criação do servidor e de suas rotas.
 const express = require("express");
-// Importa a conexão com o PostgreSQL configurada no arquivo bd.js.
 const db = require("./bd");
-
-// Cria a aplicação Express que receberá as requisições do navegador.
 const app = express();
 
-// Disponibiliza os arquivos estáticos desta pasta, como HTML e CSS. __dirname trata-se do nome do diretório(pasta) atual.
-app.use(express.static(__dirname));
+app.use(express.static(__dirname)); // Permite abrir seus arquivos HTML e CSS no navegador
+app.use(express.json()); // Permite o servidor ler os dados enviados pelo formulário
 
-// Define o que o servidor faz quando recebe uma requisição GET para /transferencias.
-// req representa a requisição recebida; res é usado para enviar a resposta.
-app.get("/transferencias", async (req, res) => {
-    // try/catch permite tratar erros que possam acontecer durante a consulta.
-    try {
-        // Executa a consulta no banco e aguarda seu resultado antes de continuar.
-        const resultado = await db.query(
-            `SELECT 
-            row_number() over() as "indice",
-            u.cpf as emissor,
-            u.cpf as destinatario,
-            valor,
-            u.nome,
-            u.sobrenome,
-            data 
-            from usuarios u inner join transferencias t 
-            on u.id = t.emissor
-            order by (data)`
-        );
-    
-        // Envia as linhas retornadas pelo banco ao navegador no formato JSON.
-        res.json(resultado.rows);
-
-    // Se algo falhar no bloco try, o erro é tratado aqui.
-    } catch (erro) {
-        console.log(erro);
-        // Informa ao navegador que ocorreu um erro interno no servidor (HTTP 500).
-        res.status(500).send("Erro ao buscar transferências");
-    }
+// Busca as transferências para mostrar na tela
+app.get("/transferencias", async function (req, res) {
+    const resultado = await db.query(
+        `SELECT 
+        row_number() over() as "indice",
+        u.cpf as emissor,
+        u.cpf as destinatario,
+        valor,
+        u.nome,
+        u.sobrenome,
+        data 
+        from usuarios u inner join transferencias t 
+        on u.id = t.emissor
+        order by (data)`
+    );
+    res.json(resultado.rows); // Devolve os dados para a página
 });
- 
-// Inicia o servidor na porta 3000 e executa a função quando ele estiver ativo.
-app.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
+
+// Salva uma nova transferência no banco
+app.post("/transferencias", async function (req, res) {
+    // Pega os valores que vieram do formulário
+    const cpfEmissor = req.body.emissor;
+    const cpfReceptor = req.body.receptor;
+    const valor = req.body.valor;
+
+    // Acha o ID do emissor e do receptor pelo CPF
+    const emissor = await db.query("SELECT id FROM usuarios WHERE cpf = $1", [cpfEmissor]);
+    const receptor = await db.query("SELECT id FROM usuarios WHERE cpf = $1", [cpfReceptor]);
+
+    // Se algum CPF não existir, avisa e para por aqui
+    if (emissor.rows.length === 0 || receptor.rows.length === 0) {
+        res.send("Um dos CPFs não foi encontrado encontrado!");
+        return;
+    }
+
+    // Insere na tabela transferencias usando os IDs encontrados
+    await db.query(
+        "INSERT INTO transferencias (emissor, destinatario, valor) VALUES ($1, $2, $3)",
+        [emissor.rows[0].id, receptor.rows[0].id, valor]
+    );
+
+    res.send("Salvo!"); // Avisa a página que deu certo
+});
+
+app.listen(3000, function () {
+    console.log("Servidor rodando na porta 3000"); // Liga o servidor
 });
