@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PayCheck</title>
-    <link rel="stylesheet" href="style_insert.css">
+    <link rel="stylesheet" href="style_insert_e_register.css">
 </head>
 <body>
 
@@ -14,6 +14,7 @@
         <nav>
             <a href="./">Início</a>
             <a href="./insert.html">Inserir</a>
+            <a href="./register_user.html">Cadastro</a>
         </nav>
     </header>
 
@@ -21,6 +22,9 @@
         <div class="content">
             <form id="form-transferencia">
                 <table class="tabela_insert">
+                    <thead>
+                        <th colspan="2">Inserção manual de registos</th>
+                    </thead>
                     <tbody>
                         <tr>
                             <td><label for="emissor">Emissor(CPF):</label></td>
@@ -36,7 +40,16 @@
                         </tr>
                     </tbody>
                 </table>
-                <button type="submit">Salvar</button>
+                <div class="container_botoes">
+                    <button type="submit">Salvar</button>
+                    <button type="button" onclick="limpar()">Limpar</button>
+                </div>
+                <script>
+                    function limpar(){
+                        const formulario = document.getElementById('form-cadastro');
+                        formulario.reset()
+                    }
+                </script>
             </form>
         </div>
     </main>
@@ -46,15 +59,10 @@
             // Impede o navegador de recarregar a página ao clicar em Salvar
             event.preventDefault();
 
-            // Pega os elementos dos campos na tela
-            const campoEmissor = document.getElementById("emissor");
-            const campoReceptor = document.getElementById("receptor");
-            const campoValor = document.getElementById("valor");
-
             // Lê o que foi digitado em cada campo
-            const emissor = campoEmissor.value;
-            const receptor = campoReceptor.value;
-            const valor = campoValor.value;
+            const emissor = document.getElementById("emissor").value;
+            const receptor = document.getElementById("receptor").value;
+            const valor = document.getElementById("valor").value;
 
             // Monta o pacote de dados para enviar ao servidor
             const dados = {

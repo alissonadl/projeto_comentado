@@ -132,3 +132,12 @@ input:focus {
     background-color: white;
     box-shadow: 0 0 0 2px rgba(52, 79, 108, 0.12);
 }
+
+th{
+    text-align: center;
+}
+
+.container_botoes{
+    display: flex;
+    justify-content: space-around;
+}

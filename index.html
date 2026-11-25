@@ -8,19 +8,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <header>
         <div class="logo">PayCheck</div>
         <nav>
             <a href="./">Início</a>
             <a href="./insert.html">Inserir</a>
+            <a href="./register_user.html">Cadastro</a>
         </nav>
     </header>
-
     <main>
         <div class="content">
             <h2>Transferências</h2>
-
             <table>
                 <thead>
                     <tr>
@@ -56,8 +54,8 @@
                     tabela.innerHTML += `
                         <tr>
                             <td>${item.indice}</td>
-                            <td>${item.emissor} (${item.nome},${item.sobrenome})</td>
-                            <td>${item.destinatario}</td>
+                            <td>${item.cpf_emissor} (${item.nome_emissor},${item.sobrenome_emissor})</td>
+                            <td>${item.cpf_destinatario} (${item.nome_destinatario},${item.sobrenome_destinatario})</td>
                             <td>R$ ${item.valor}</td>
                             <td>${new Date(item.data).toLocaleString("pt-BR")}</td>
                         </tr>

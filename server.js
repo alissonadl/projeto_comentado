@@ -9,18 +9,42 @@ app.use(express.json()); // Permite o servidor ler os dados enviados pelo formul
 app.get("/transferencias", async function (req, res) {
     const resultado = await db.query(
         `SELECT 
-        row_number() over() as "indice",
-        u.cpf as emissor,
-        u.cpf as destinatario,
-        valor,
-        u.nome,
-        u.sobrenome,
-        data 
-        from usuarios u inner join transferencias t 
-        on u.id = t.emissor
-        order by (data)`
+            row_number() OVER (ORDER BY transferencias.data) AS "indice",
+            usuarios_emissor.cpf AS cpf_emissor,
+            usuarios_destinatario.cpf AS cpf_destinatario,
+            transferencias.valor,
+            usuarios_emissor.nome AS nome_emissor,
+            usuarios_emissor.sobrenome AS sobrenome_emissor,
+            usuarios_destinatario.nome AS nome_destinatario,
+            usuarios_destinatario.sobrenome AS sobrenome_destinatario,
+            transferencias.data
+        FROM transferencias
+        INNER JOIN usuarios AS usuarios_emissor
+            ON usuarios_emissor.id = transferencias.emissor
+        INNER JOIN usuarios AS usuarios_destinatario
+            ON usuarios_destinatario.id = transferencias.destinatario
+        ORDER BY transferencias.data;`
     );
     res.json(resultado.rows); // Devolve os dados para a página
+});
+
+app.post("/cadastro", async function (req, res) {
+    const nome = req.body.nome;
+    const sobrenome = req.body.sobrenome;
+    const cpf = req.body.cpf;
+    const data_nascimento = req.body.data_nascimento;
+
+    // Insere na tabela transferencias usando os IDs encontrados
+    await db.query(
+        "INSERT INTO usuarios (nome, sobrenome, cpf, data_nascimento) VALUES ($1, $2, $3, $4)",
+        [nome,sobrenome,cpf,data_nascimento]
+    );
+
+    res.send("Cadastro realizado com sucesso!"); // Avisa a página que deu certo
+});
+
+app.listen(3000, function () {
+    console.log("Servidor rodando na porta 3000"); // Liga o servidor
 });
 
 // Salva uma nova transferência no banco
@@ -34,12 +58,6 @@ app.post("/transferencias", async function (req, res) {
     const emissor = await db.query("SELECT id FROM usuarios WHERE cpf = $1", [cpfEmissor]);
     const receptor = await db.query("SELECT id FROM usuarios WHERE cpf = $1", [cpfReceptor]);
 
-    // Se algum CPF não existir, avisa e para por aqui
-    if (emissor.rows.length === 0 || receptor.rows.length === 0) {
-        res.send("Um dos CPFs não foi encontrado encontrado!");
-        return;
-    }
-
     // Insere na tabela transferencias usando os IDs encontrados
     await db.query(
         "INSERT INTO transferencias (emissor, destinatario, valor) VALUES ($1, $2, $3)",
@@ -47,8 +65,4 @@ app.post("/transferencias", async function (req, res) {
     );
 
     res.send("Salvo!"); // Avisa a página que deu certo
-});
-
-app.listen(3000, function () {
-    console.log("Servidor rodando na porta 3000"); // Liga o servidor
 });
