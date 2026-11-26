@@ -54,8 +54,8 @@
                     tabela.innerHTML += `
                         <tr>
                             <td>${item.indice}</td>
-                            <td>${item.cpf_emissor} (${item.nome_emissor},${item.sobrenome_emissor})</td>
-                            <td>${item.cpf_destinatario} (${item.nome_destinatario},${item.sobrenome_destinatario})</td>
+                            <td>${item.cpf_emissor} (${item.nome_emissor} ${item.sobrenome_emissor})</td>
+                            <td>${item.cpf_destinatario} (${item.nome_destinatario} ${item.sobrenome_destinatario})</td>
                             <td>R$ ${item.valor}</td>
                             <td>${new Date(item.data).toLocaleString("pt-BR")}</td>
                         </tr>
