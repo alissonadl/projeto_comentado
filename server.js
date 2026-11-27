@@ -5,6 +5,10 @@ const app = express();
 app.use(express.static(__dirname)); // Permite abrir seus arquivos HTML e CSS no navegador
 app.use(express.json()); // Permite o servidor ler os dados enviados pelo formulário
 
+app.listen(3000, function () {
+    console.log("Servidor rodando na porta 3000"); // Liga o servidor
+});
+
 // Busca as transferências para mostrar na tela
 app.get("/transferencias", async function (req, res) {
     const resultado = await db.query(
@@ -41,10 +45,6 @@ app.post("/cadastro", async function (req, res) {
     );
 
     res.send("Cadastro realizado com sucesso!"); // Avisa a página que deu certo
-});
-
-app.listen(3000, function () {
-    console.log("Servidor rodando na porta 3000"); // Liga o servidor
 });
 
 // Salva uma nova transferência no banco
